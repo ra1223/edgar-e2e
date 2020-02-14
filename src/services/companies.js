@@ -10,13 +10,12 @@ const getCompanyData = async (company_symbol = '') => {
 
   let browser;
   try {
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
 
     await page.goto(SEC_GOV_COMPANY_URL + company_symbol);
 
     const companyData = await page.evaluate(() => {
-      'body > div > center > h1'
       const notFoundTag = document.querySelector('body > div > center > h1');
 
       if (notFoundTag && notFoundTag.innerText === 'No matching Ticker Symbol.') {

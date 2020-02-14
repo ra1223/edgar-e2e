@@ -12,10 +12,10 @@ const getAllFilings = async (companySymbol = '') => {
 
   let browser;
   try {
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
 
-    await page.goto(`${SEC_GOV_COMPANY_URL}${companySymbol}`);
+    await page.goto(SEC_GOV_COMPANY_URL + companySymbol);
 
     const documentLinks = await page.evaluate((SEC_GOV_BASE_URL) => {
       const documentButtons = Array.from(document.querySelectorAll('#documentsbutton'));
