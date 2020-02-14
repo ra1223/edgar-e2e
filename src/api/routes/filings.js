@@ -8,13 +8,18 @@ const { CompanyNotFoundError } =  require('../../common/errors/CompanyNotFoundEr
 const route = Router();
 
 module.exports = (app) => {
-  app.use('/', route);
+  app.use(route);
 
   route.get(
     '/filings',
     celebrate({
       [Segments.BODY]: Joi.object({
-        company_symbol: Joi.string().length(4).required()
+        company_symbol: Joi.string().empty().length(4).required()
+        .messages({
+          'string.empty': `company_symbol can't be empty`,
+          'string.length': 'company_symbol must be of length 4',
+          'any.required': 'company_symbol is required'
+        })
       })
     }),
     async (req, res) => {
@@ -33,6 +38,4 @@ module.exports = (app) => {
       }
     }
   )
-
-  route.use(errors());
 }

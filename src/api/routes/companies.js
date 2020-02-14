@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { celebrate, Joi, Segments, errors } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 
 const { getCompanyData } = require('../../services/companies');
 const { CompanyNotFoundError } = require('../../common/errors/CompanyNotFoundError');
@@ -7,13 +7,13 @@ const { CompanyNotFoundError } = require('../../common/errors/CompanyNotFoundErr
 const route = Router();
 
 module.exports = (app) => {
-  app.use('/', route);
+  app.use(route);
 
   route.get(
     '/company',
     celebrate({
-      [Segments.BODY]: Joi.object({
-        company_symbol: Joi.string().length(4).required()
+      body: Joi.object().keys({
+        company_symbol: Joi.string().required(),
       })
     }),
     async (req, res) => {
@@ -25,13 +25,11 @@ module.exports = (app) => {
         return res.status(200).json({ company_name, company_symbol, company_address, company_phone_number });
       } catch (e) {
         if (e instanceof CompanyNotFoundError) {
-          return res.status(400).json({ message: e.message });
+          return res.status(e.status).json({ message: e.message });
         }
 
         return res.status(500).json({ message: e.message });
       }
     }
   )
-
-  route.use(errors());
 };
