@@ -70,3 +70,13 @@ Response
     "company_phone_number": "650-253-0000"
 }
 ```
+
+* Get Company Information `GET /api/health`
+
+Response
+
+```json
+{
+    "message": "ok"
+}
+```
