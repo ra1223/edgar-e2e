@@ -16,7 +16,7 @@ module.exports = (app) => {
         company_symbol: Joi.string().required(),
       })
     }),
-    async (req, res) => {
+    async (req, res, next) => {
       try {
         const { company_symbol } = req.body;
 
@@ -24,11 +24,7 @@ module.exports = (app) => {
 
         return res.status(200).json({ company_name, company_symbol, company_address, company_phone_number });
       } catch (e) {
-        if (e instanceof CompanyNotFoundError) {
-          return res.status(e.status).json({ message: e.message });
-        }
-
-        return res.status(500).json({ message: e.message });
+        next(e);
       }
     }
   )
