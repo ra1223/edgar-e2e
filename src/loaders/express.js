@@ -1,9 +1,11 @@
 const bodyParser = require('body-parser');
 
 const routes = require('../api');
+const { InvalidInputError } = require('../common/errors/InvalidInputError');
 
 module.exports = (app) => {
   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
 
   app.use('/api', routes());
   
@@ -15,14 +17,18 @@ module.exports = (app) => {
   app.use((req, res, next) => {
     const error = new Error('Endpoint not found');
     error.status = 404;
-    next(error);
+    return next(error);
   });
 
   /**
    * Error middleware that responds to a failed request.
    */
   app.use((err, req, res, next) => {
-    res.status(err.status || 500).json({
+    if (err.joi) {
+      err = new InvalidInputError(err.message);
+    }
+
+    return res.status(err.status || 500).json({
       error: {
         status: err.status,
         type: err.name,
