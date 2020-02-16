@@ -2,7 +2,7 @@ class CompanyNotFoundError extends Error {
   constructor(message = '', ...args) {
     super(message);
     this.name = 'CompanyNotFoundError'
-    this.status = 400;
+    this.status = 404;
   }
 }
 

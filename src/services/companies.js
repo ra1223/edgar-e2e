@@ -4,11 +4,8 @@ const { SEC_GOV_COMPANY_URL }  = require('../common/constants')
 const { CompanyNotFoundError } = require('../common/errors/CompanyNotFoundError');
 
 const getCompanyData = async (company_symbol = '') => {
-  if (company_symbol == '') {
-    throw new CompanyNotFoundError('Empty or null company_symbol');
-  }
-
   let browser;
+  
   try {
     browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();

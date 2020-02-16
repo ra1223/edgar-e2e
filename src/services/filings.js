@@ -6,11 +6,8 @@ const { SEC_GOV_BASE_URL, SEC_GOV_COMPANY_URL } = require('../common/constants')
 const { CompanyNotFoundError } = require('../common/errors/CompanyNotFoundError');
 
 const getAllFilings = async (companySymbol = '') => {
-  if (companySymbol == '') {
-    throw new CompanyNotFoundError('Empty or null company_symbol');
-  }
-
   let browser;
+
   try {
     browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
@@ -18,12 +15,18 @@ const getAllFilings = async (companySymbol = '') => {
     await page.goto(SEC_GOV_COMPANY_URL + companySymbol);
 
     const documentLinks = await page.evaluate((SEC_GOV_BASE_URL) => {
+      const notFoundTag = document.querySelector('body > div > center > h1');
+
+      if (notFoundTag && notFoundTag.innerText === 'No matching Ticker Symbol.') {
+        return null;
+      }
+
       const documentButtons = Array.from(document.querySelectorAll('#documentsbutton'));
       return documentButtons.map((documentButton) => SEC_GOV_BASE_URL + documentButton.getAttribute('href'));
     }, SEC_GOV_BASE_URL);
 
     if (documentLinks === null || documentLinks.length === 0) {
-      throw new CompanyNotFoundError('Invalid company input');
+      throw new CompanyNotFoundError('No company found.');
     }
 
     let filings = [];
