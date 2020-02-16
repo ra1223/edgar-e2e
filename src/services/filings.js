@@ -5,14 +5,18 @@ const htmlPattern = RegExp('/^(.*\.(?!(htm|html|class|js)$))?[^.]*');
 const { SEC_GOV_BASE_URL, SEC_GOV_COMPANY_URL } = require('../common/constants');
 const { CompanyNotFoundError } = require('../common/errors/CompanyNotFoundError');
 
-const getAllFilings = async (companySymbol = '') => {
+const getAllFilings = async (companySymbol, filed_prior_to) => {
   let browser;
 
   try {
     browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
 
-    await page.goto(SEC_GOV_COMPANY_URL + companySymbol);
+    let secLink = SEC_GOV_COMPANY_URL + 
+                  companySymbol + 
+                  (filed_prior_to? `&dateb=${filed_prior_to.replace(/-/g, '')}` : '');
+
+    await page.goto(secLink);
 
     const documentLinks = await page.evaluate((SEC_GOV_BASE_URL) => {
       const notFoundTag = document.querySelector('body > div > center > h1');

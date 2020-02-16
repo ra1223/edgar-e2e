@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/Raul-Alvarez/edgar-e2e#readme",
   "dependencies": {
+    "@hapi/joi": "^16.1.8",
+    "@hapi/joi-date": "^2.0.1",
     "body-parser": "^1.19.0",
     "celebrate": "^11.0.1",
     "dotenv": "^8.2.0",

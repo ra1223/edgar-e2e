@@ -1,9 +1,9 @@
 const { Router } = require('express');
-const { celebrate, Joi, Segments, errors } = require('celebrate');
+const { celebrate, Segments, errors } = require('celebrate');
+const Joi = require('@hapi/joi')
+    .extend(require('@hapi/joi-date'));
 
 const { getAllFilings } = require('../../services/filings');
-
-const { CompanyNotFoundError } =  require('../../common/errors/CompanyNotFoundError');
 
 const route = Router();
 
@@ -13,15 +13,16 @@ module.exports = (app) => {
   route.get(
     '/filings',
     celebrate({
-      query: {
-        company_symbol: Joi.string().min(1).max(5).required()
-      }
+      query: Joi.object({
+        company_symbol: Joi.string().min(1).max(5).required(),
+        filed_prior_to: Joi.date().format('YYYY-MM-DD').raw()
+      })
     }),
     async (req, res, next) => {
       try {
-        const { company_symbol } = req.body;
+        const { company_symbol, filed_prior_to } = req.query;
 
-        const filings = await getAllFilings(company_symbol);
+        const filings = await getAllFilings(company_symbol, filed_prior_to);
 
         return res.status(200).json({ company_symbol, filings });
       } catch (e) {

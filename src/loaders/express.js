@@ -28,6 +28,8 @@ module.exports = (app) => {
       err = new InvalidInputError(err.message);
     }
 
+    console.debug(err.status + ' ' + err.name + ' ' + err.message);
+
     return res.status(err.status || 500).json({
       error: {
         status: err.status,

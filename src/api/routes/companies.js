@@ -2,7 +2,6 @@ const { Router } = require('express');
 const { celebrate, Joi } = require('celebrate');
 
 const { getCompanyData } = require('../../services/companies');
-const { CompanyNotFoundError } = require('../../common/errors/CompanyNotFoundError');
 
 const route = Router();
 
