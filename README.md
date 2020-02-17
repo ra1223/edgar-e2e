@@ -14,69 +14,191 @@ git clone https://github.com/Raul-Alvarez/edgar-e2e.git
 npm install
 ```
 
-3. Run the app:
+3a. Run the app:
 
 ```shell
 npm start
 ```
 
+3b. To run with `nodemon`, invoke:
+
+```shell
+npm run dev
+```
+
+
+## Deployment
+
+The app is currently live on Heroku. The base url is: `https://lit-garden-30494.herokuapp.com`
+
 ## REST APIs
 
-* Get All Fillings of Company `GET /api/filings`
+### Get Fillings of Company
 
-Request:
+- **URL:**
 
-```json
-{
-  "company_symbol": "goog"
-}
-```
+`/api/filings/`
 
-Response
+- **Method:**
 
-```json
-{
-    "company_symbol": "goog",
-    "filings": [
-        {
-            "number": "SC 13G/A",
-            "link": "https://sec.gov/Archives/edgar/data/1242463/000119312520035882/d812296dsc13ga.htm",
-            "date": "2020-02-14"
-        },
-        {
-          ...
-        }
-    ]
-}
-```
+`GET`
 
-* Get Company Information `GET /api/filings`
+- **Query Parameters:**
 
-Request:
+**Required:**
+
+`company_symbol=[string]`: min length = 2, max length = 5. i.e `GOOG`, `AAPL`
+
+**Optional**
+
+`filing_type=[string]` i.e `4`, `3`
+
+`filing_prior_type=[string format('YYYY-MM-DD')]` i.e. `2020-01-15`
+
+**Body Params:**
+
+None
+
+**Success Response:**
+
+Status: 200
 
 ```json
 {
-  "company_symbol": "goog"
+  "company_symbol": "GOOG",
+  "filings": [
+    {
+      "number": "SC 13G/A",
+      "link": "https://sec.gov/Archives/edgar/data/1242463/000119312520035882/d812296dsc13ga.htm",
+      "date": "2020-02-14"
+    },
+    {
+      ...
+    }
+  ]
 }
 ```
 
-Response
+**Failed Response:**
+
+Status: 404
 
 ```json
 {
-    "company_name": "Alphabet Inc.",
-    "company_symbol": "goog",
-    "company_address": "1600 AMPHITHEATRE PARKWAY, MOUNTAIN VIEW CA 94043",
-    "company_phone_number": "650-253-0000"
+  "error": {
+    "status": 404,
+    "type": "CompanyNotFoundError",
+    "message": "No company found."
+  }
 }
 ```
 
-* Get Company Information `GET /api/health`
-
-Response
+Status: 400
 
 ```json
 {
-    "message": "ok"
+  "error": {
+    "status": 400,
+    "type": "InvalidInputError",
+    "message": "\"company_symbol\" length must be less than or equal to 5 characters long"
+  }
 }
 ```
+
+### Get Company Info
+
+- **URL:**
+
+`/api/company/`
+
+- **Method:**
+
+`GET`
+
+- **Query Parameters:**
+
+**Required:**
+
+`company_symbol=[string]`: min length = 2, max length = 5. i.e `GOOG`, `AAPL`
+
+**Optional**
+
+None
+
+**Body Params:**
+
+None
+
+**Success Response:**
+
+Status: 200
+
+```json
+{
+  "company_name": "Alphabet Inc.",
+  "company_symbol": "GOOG",
+  "company_address": "1600 AMPHITHEATRE PARKWAY, MOUNTAIN VIEW CA 94043",
+  "company_phone_number": "650-253-0000"
+}
+```
+
+**Failed Response:**
+
+Status: 404
+
+```json
+{
+  "error": {
+    "status": 404,
+    "type": "CompanyNotFoundError",
+    "message": "No company found."
+  }
+}
+```
+
+Status: 400
+
+```json
+{
+  "error": {
+    "status": 400,
+    "type": "InvalidInputError",
+    "message": "\"company_symbol\" length must be less than or equal to 5 characters long"
+  }
+}
+```
+
+### Health Check
+
+- **URL:**
+
+`/api/health/`
+
+- **Method:**
+
+`GET`
+
+- **Successful Response:**
+
+Status: 200
+
+```json
+{
+  "message": "ok"
+}
+```
+
+## Learnings / Findings
+
+- [Structuring Node.js code base](https://softwareontheroad.com/ideal-nodejs-project-structure/)
+
+In my previous role, I had a template code base to clone from so I usually never questioned how to structure my Node.js projects. I decided to research online and found a solid structure where everything is well organized and easily changable without having to fix code in several files.
+
+- [Parsing html](https://github.com/puppeteer/puppeteer)
+
+I never tried out parsing html before so I had to get accustomed to puppeteer which I believe is a great library. 
+
+- [Getting puppeteer to work on Heroku](https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-on-heroku). 
+
+Previously, I deployed the app and was getting `500` errors with `page`, `page.close()`, etc not being recognize. It turned out that the Heroku app instances don't natively support puppteer so the puppeteer community created a webpack as a fix.
+
