@@ -1,3 +1,5 @@
+// Routes for companies
+
 const { Router } = require('express');
 const { celebrate, Joi } = require('celebrate');
 

@@ -1,4 +1,5 @@
-// Load routes to app
+// Load all routes for express.
+
 const { Router } = require('express');
 
 const status = require('./routes/status');

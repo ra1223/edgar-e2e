@@ -1,3 +1,5 @@
+// All routes for the status of the app.
+
 const { Router } = require('express');
 
 const route = Router();

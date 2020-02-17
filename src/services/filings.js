@@ -1,3 +1,5 @@
+// Business logic for all filings.
+
 const puppeteer = require('puppeteer');
 
 const htmlPattern = RegExp('/^(.*\.(?!(htm|html|class|js)$))?[^.]*');
@@ -11,6 +13,7 @@ const { CompanyNotFoundError } = require('../common/errors/CompanyNotFoundError'
  * security for trading purposes. New York Stock Exchange (NYSE) and American Stock Exchange 
  * (AMEX) listed stocks have three characters or less. Nasdaq-listed securities have four or 
  * five characters.
+ * @param {string} filing_type - type of filing requested.
  * @param {string: date format('YYYY-MM-DD')} filed_prior_to - date where filings were filed.
  * 
  * Buisness logic to handle GET /api/filings
@@ -39,12 +42,11 @@ const getAllFilings = async (companySymbol, filing_type, filed_prior_to) => {
                   companySymbol + 
                   (filing_type ? `&type=${filing_type}`: '') +
                   (filed_prior_to ? `&dateb=${filed_prior_to.replace(/-/g, '')}` : '');
-    console.log(secLink);
 
     await page.goto(secLink);
 
     // Phase 2
-    const documentLinks = await page.evaluate((SEC_GOV_BASE_URL) => {
+    let documentLinks = await page.evaluate((SEC_GOV_BASE_URL) => {
       const notFoundTag = document.querySelector('body > div > center > h1');
 
       if (notFoundTag && notFoundTag.innerText === 'No matching Ticker Symbol.') {
@@ -52,6 +54,7 @@ const getAllFilings = async (companySymbol, filing_type, filed_prior_to) => {
       }
 
       const documentButtons = Array.from(document.querySelectorAll('#documentsbutton'));
+
       return documentButtons.map((documentButton) => SEC_GOV_BASE_URL + documentButton.getAttribute('href'));
     }, SEC_GOV_BASE_URL);
 

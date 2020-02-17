@@ -1,3 +1,5 @@
+// Starting point of the app.
+
 const express = require('express');
 
 const config = require('./config');

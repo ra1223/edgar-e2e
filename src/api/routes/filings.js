@@ -1,3 +1,5 @@
+// Routes for filings
+
 const { Router } = require('express');
 const { celebrate, Segments, errors } = require('celebrate');
 const Joi = require('@hapi/joi')
@@ -23,13 +25,14 @@ module.exports = (app) => {
       try {
         const { 
           company_symbol,
+          limit,
           filing_type,
           filed_prior_to
         } = req.query;
-        console.log(filing_type);
 
         const filings = await getAllFilings(
           company_symbol,
+          limit,
           filing_type,
           filed_prior_to
         );

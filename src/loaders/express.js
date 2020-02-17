@@ -1,3 +1,5 @@
+// Loads all middleware and routes to get express started.
+
 const bodyParser = require('body-parser');
 
 const routes = require('../api');

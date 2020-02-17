@@ -1,3 +1,5 @@
+// Prepares environment variables necessary to start app.
+
 const dotenv = require('dotenv');
 
 module.exports = {
