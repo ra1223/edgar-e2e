@@ -15,14 +15,24 @@ module.exports = (app) => {
     celebrate({
       query: Joi.object({
         company_symbol: Joi.string().min(1).max(5).required(),
+        filing_type: Joi.string(),
         filed_prior_to: Joi.date().format('YYYY-MM-DD').raw()
       })
     }),
     async (req, res, next) => {
       try {
-        const { company_symbol, filed_prior_to } = req.query;
+        const { 
+          company_symbol,
+          filing_type,
+          filed_prior_to
+        } = req.query;
+        console.log(filing_type);
 
-        const filings = await getAllFilings(company_symbol, filed_prior_to);
+        const filings = await getAllFilings(
+          company_symbol,
+          filing_type,
+          filed_prior_to
+        );
 
         return res.status(200).json({ company_symbol, filings });
       } catch (e) {
