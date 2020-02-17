@@ -1,5 +1,35 @@
 # Edgar E2E
 
+## Project Structure
+
+```text
++-- README.md
++-- package.json
++-- package-lock.json
++-- .gitignore
++-- src/
+   +-- app.js
+   +-- api/
+      +-- index.js
+      +-- routes/
+          +-- companies.js
+          +-- filings.js
+          +-- status.js
+    +-- common/
+        +-- constants.js
+        +-- errors/
+            +-- CompanyNotFoundError.js
+            +-- InvalidInputError.js
+    +-- config/
+        +-- index.js
+    +-- loaders/
+        +-- express.js
+        +-- index.js
+    +-- services/
+        +-- companies.js
+        +-- filings.js
+```
+
 ## Start App
 
 1. Clone the repo:
@@ -194,6 +224,10 @@ Status: 200
 
 In my previous role, I had a template code base to clone from so I usually never questioned how to structure my Node.js projects. I decided to research online and found a solid structure where everything is well organized and easily changable without having to fix code in several files.
 
+- [Working with a validator (Joi/celebrate)](https://github.com/arb/celebrate)
+
+I've previously worked such as [Lodash](https://lodash.com/) before but I did build my own middleware for validating requests. I realized that such a library existed such as `celebrate` which leverages `Joi` that makes life much simpler. 
+
 - [Parsing html](https://github.com/puppeteer/puppeteer)
 
 I never tried out parsing html before so I had to get accustomed to puppeteer which I believe is a great library. 
@@ -201,4 +235,3 @@ I never tried out parsing html before so I had to get accustomed to puppeteer wh
 - [Getting puppeteer to work on Heroku](https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-on-heroku). 
 
 Previously, I deployed the app and was getting `500` errors with `page`, `page.close()`, etc not being recognize. It turned out that the Heroku app instances don't natively support puppteer so the puppeteer community created a webpack as a fix.
-
