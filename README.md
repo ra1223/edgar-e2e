@@ -1,5 +1,9 @@
 # Edgar E2E
 
+## Description
+
+This is a Node.js REST application that'll scrape data from the [SEC Edgar webpages](https://www.sec.gov/edgar/searchedgar/companysearch.html).
+
 ## Project Structure
 
 ```text
@@ -85,11 +89,11 @@ The app is currently live on Heroku. The base url is: `https://lit-garden-30494.
 
 `filing_prior_type=[string format('YYYY-MM-DD')]` i.e. `2020-01-15`
 
-**Body Params:**
+- **Body Params:**
 
 None
 
-**Success Response:**
+- **Success Response:**
 
 Status: 200
 
@@ -109,7 +113,7 @@ Status: 200
 }
 ```
 
-**Failed Response:**
+- **Failed Response:**
 
 Status: 404
 
@@ -155,11 +159,11 @@ Status: 400
 
 None
 
-**Body Params:**
+- **Body Params:**
 
 None
 
-**Success Response:**
+- **Success Response:**
 
 Status: 200
 
@@ -172,7 +176,7 @@ Status: 200
 }
 ```
 
-**Failed Response:**
+- **Failed Response:**
 
 Status: 404
 
