@@ -25,17 +25,15 @@ module.exports = (app) => {
       try {
         const { 
           company_symbol,
-          limit,
           filing_type,
           filed_prior_to
         } = req.query;
 
-        const filings = await getAllFilings(
-          company_symbol,
-          limit,
+        const filings = await getAllFilings({
           filing_type,
+          company_symbol,
           filed_prior_to
-        );
+        });
 
         return res.status(200).json({ company_symbol, filings });
       } catch (e) {

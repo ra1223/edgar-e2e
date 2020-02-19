@@ -60,7 +60,6 @@ npm start
 npm run dev
 ```
 
-
 ## Deployment
 
 The app is currently live on Heroku. The base url is: `https://lit-garden-30494.herokuapp.com`
@@ -83,7 +82,7 @@ The app is currently live on Heroku. The base url is: `https://lit-garden-30494.
 
 `company_symbol=[string]`: min length = 2, max length = 5. i.e `GOOG`, `AAPL`
 
-**Optional**
+**Optional:**
 
 `filing_type=[string]` i.e `4`, `3`
 

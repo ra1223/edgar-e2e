@@ -42,7 +42,7 @@ const getAllFilings = async (companySymbol, filing_type, filed_prior_to) => {
                   companySymbol + 
                   (filing_type ? `&type=${filing_type}`: '') +
                   (filed_prior_to ? `&dateb=${filed_prior_to.replace(/-/g, '')}` : '');
-
+    console.log(secLink);
     await page.goto(secLink);
 
     // Phase 2
