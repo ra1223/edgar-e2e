@@ -2,10 +2,8 @@
 
 const puppeteer = require('puppeteer');
 
-const htmlPattern = RegExp('/^(.*\.(?!(htm|html|class|js)$))?[^.]*');
-
 const { SEC_GOV_BASE_URL, SEC_GOV_COMPANY_URL } = require('../common/constants');
-const { CompanyNotFoundError } = require('../common/errors/CompanyNotFoundError');
+const { CompanyNotFoundError, FilingNotFound } = require('../common/errors/CompanyNotFoundError');
 
 /**
  * 
@@ -38,7 +36,7 @@ const getAllFilings = async (companySymbol, filing_type, filed_prior_to) => {
     browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
 
-    let secLink = SEC_GOV_COMPANY_URL + 
+    const secLink = SEC_GOV_COMPANY_URL + 
                   companySymbol + 
                   (filing_type ? `&type=${filing_type}`: '') +
                   (filed_prior_to ? `&dateb=${filed_prior_to.replace(/-/g, '')}` : '');
@@ -46,7 +44,7 @@ const getAllFilings = async (companySymbol, filing_type, filed_prior_to) => {
     await page.goto(secLink);
 
     // Phase 2
-    let documentLinks = await page.evaluate((SEC_GOV_BASE_URL) => {
+    const documentLinks = await page.evaluate((SEC_GOV_BASE_URL) => {
       const notFoundTag = document.querySelector('body > div > center > h1');
 
       if (notFoundTag && notFoundTag.innerText === 'No matching Ticker Symbol.') {
@@ -63,11 +61,11 @@ const getAllFilings = async (companySymbol, filing_type, filed_prior_to) => {
     }
 
     if (documentLinks.length == 0) {
-      throw new CompanyNotFoundError('No filings found.')
+      throw new FilingNotFound('No filings found.')
     }
 
     // Phase 3
-    let filings = [];
+    const filings = [];
 
     for (documentLink of documentLinks) {
       await page.goto(documentLink);
